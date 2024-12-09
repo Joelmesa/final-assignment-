@@ -1,0 +1,128 @@
+public class SimpleLinkedList {
+
+    /**
+     * Inner class for Node. Node fields can be accessed directly, for simplicity of
+     * code. This is an intentional violation of the Pact.
+     */
+    class Node {
+        String data;
+        Node next;
+
+        /** Simple string representation for Node */
+        public String toString() {
+            return this.data;
+        } // method Node.toString
+    } // inner class Node
+
+    /** The only field in class SimpleLinkedList */
+    Node head;
+
+    /**
+     * Add a new node to the linked list
+     */
+    public void add(String data) {
+        Node newNode = new Node();
+        newNode.data = data;
+        if (this.head == null) {
+            this.head = newNode;
+        } else {
+            // Traverse the list to find the last node
+            Node current = this.head;
+            while (current.next != null) {
+                current = current.next;
+            }
+            // current is now the last node in the list
+            current.next = newNode;
+        }
+    } // method add
+
+    /**
+     * Find and return the middle node of the linked list.
+     * 
+     * Remember, no arrays or arraylists or any other data structure except for
+     * SimpleLinkedList.
+     */
+    public Node findMiddle() {
+        if (this.head == null) {
+            return null; // Empty list
+        }
+        Node slow = this.head;
+        Node fast = this.head;
+        while (fast != null && fast.next != null) {
+            slow = slow.next;       // Moves one step
+            fast = fast.next.next; // Moves two steps
+        }
+        return slow; // Slow will be at the middle when fast reaches the end
+    } // method SimpleLinkedList.findMiddle
+
+    /**
+     * Invert a linked list.
+     * 
+     * Remember, no arrays or arraylists or any other data structure except for
+     * SimpleLinkedList.
+     * 
+     * For this method you may NOT use method SimpleLinkedList.add
+     */
+    public SimpleLinkedList invert() {
+        SimpleLinkedList invertedList = new SimpleLinkedList();
+        Node current = this.head;
+        Node prev = null;
+        while (current != null) {
+            Node next = current.next; // Save the next node
+            current.next = prev;      // Reverse the link
+            prev = current;           // Move prev to the current node
+            current = next;           // Move to the next node
+        }
+        invertedList.head = prev; // Set the head of the inverted list
+        return invertedList;
+    } // method SimpleLinkedList.invert
+
+    /** String representation for the simple linked list */
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        if (this.head != null) {
+            Node current = this.head;
+            while (current != null) {
+                sb.append(String.format("%s", current.data));
+                current = current.next;
+            }
+        }
+        return sb.toString();
+    } // method SimpleLinkedList.toString
+
+    /**
+     * Driver/test code. This is some of the most embarassing code I've ever written
+     * but it works. Learn from it and do not write code that bad! :-)
+     */
+    public static void main(String[] args) {
+        SimpleLinkedList demo = new SimpleLinkedList();
+        boolean test1 = demo.findMiddle() == null;
+        demo.add("A");
+        boolean test2 = demo.findMiddle().data.equals("A");
+        demo.add("B");
+        boolean test3 = demo.findMiddle().data.equals("A");
+        demo.add("C");
+        boolean test4 = demo.findMiddle().data.equals("B");
+        demo.add("D");
+        demo.add("E");
+        boolean test5 = demo.findMiddle().data.equals("C");
+        boolean success = test1 && test2 && test3 && test4 && test5;
+        if (success) {
+            System.out.println("Method findMiddle works as specified.");
+        } else {
+            System.out.println("Method findMiddle not working as specified.");
+        }
+        String left = demo.toString();
+        String right = demo.invert().toString();
+        boolean test10 = left.length() == right.length();
+        for (int i = 0; i < left.length(); i++) {
+            test10 = test10
+                    && left.charAt(i) == right.charAt(right.length() - 1 - i);
+        }
+        if (test10) {
+            System.out.println("Method invert works as specified.");
+        } else {
+            System.out.println("Method invert not working as specified.");
+        }
+    } // method SimpleLinkedList.main
+} // class SimpleLinkedList
